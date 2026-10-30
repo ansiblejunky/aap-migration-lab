@@ -1,0 +1,25 @@
+---
+- name: Backup Containerlab IOS-XE Configuration
+  hosts: "{{ _hosts | default('clab_ios') }}"
+  gather_facts: false
+  vars:
+    backup_dir: /tmp/network_backups
+  pre_tasks:
+    - name: Wait for device SSH
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: "{{ ansible_port }}"
+        search_regex: SSH
+        timeout: 600
+      delegate_to: localhost
+  tasks:
+    - name: Backup IOS-XE configuration
+      cisco.ios.ios_config:
+        backup: true
+        backup_options:
+          dir_path: "{{ backup_dir }}"
+          filename: "{{ inventory_hostname }}.cfg"
+
+    - name: Display backup location
+      ansible.builtin.debug:
+        msg: "Backup saved to {{ backup_dir }}/{{ inventory_hostname }}.cfg on the execution node"

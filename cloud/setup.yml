@@ -1,0 +1,834 @@
+---
+_deployment_id: '{{ lookup("ansible.builtin.password", playbook_dir + "/.deployment_id", chars=["ascii_lowercase", "digits"], length=5) }}'
+apd_managed_by: aap-product-demos
+
+user_message:
+  - >-
+    To enable automatic RHSM registration on unregistered RHEL hosts,
+    update the 'RHSM Registration' credential in AAP with your org ID
+    and activation key. https://access.redhat.com/management/activation_keys
+
+controller_credential_types:
+  - name: RHSM Activation Key
+    kind: cloud
+    inputs:
+      fields:
+        - id: rhsm_org_id
+          type: string
+          label: Organization ID
+        - id: rhsm_activation_key
+          type: string
+          label: Activation Key
+          secret: true
+      required:
+        - rhsm_org_id
+        - rhsm_activation_key
+    injectors:
+      extra_vars:
+        rhsm_org_id: !unsafe '{{ rhsm_org_id }}'
+        rhsm_activation_key: !unsafe '{{ rhsm_activation_key }}'
+
+controller_credentials:
+  - name: RHSM Registration
+    credential_type: RHSM Activation Key
+    organization: Ansible Product Demos (APD)
+    update_secrets: false
+    state: exists
+    inputs:
+      rhsm_org_id: REPLACEME
+      rhsm_activation_key: REPLACEME
+
+controller_execution_environments:
+  - name: TMM AWS EE
+    image: quay.io/acme_corp/aws_ee
+    organization: Ansible Product Demos (APD)
+    pull: missing
+
+controller_templates:
+  - name: Cloud | AWS | Create Peer Infrastructure
+    labels:
+      - aws.vpc
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/create_peer_network.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      aws_region: us-east-1
+      dmz_ssh_key_name: aws-test-key
+      priv_network_ssh_key_name: aws-test-key
+      apd_id: "{{ _deployment_id }}"
+      apd_managed_by: "{{ apd_managed_by }}"
+
+  - name: Cloud | AWS | Delete Peer Infrastructure
+    labels:
+      - aws.vpc
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/delete_peer_network.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      aws_region: us-east-1
+
+  - name: Cloud | AWS | Create Transit Infrastructure
+    labels:
+      - aws.vpc
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/create_transit_network.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      aws_region: us-east-1
+      dmz_ssh_key_name: aws-test-key
+      priv_network_ssh_key_name: aws-test-key
+      apd_id: "{{ _deployment_id }}"
+      apd_managed_by: "{{ apd_managed_by }}"
+
+  - name: Cloud | AWS | Delete Transit Infrastructure
+    labels:
+      - aws.vpc
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/delete_transit_network.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      aws_region: us-east-1
+
+  - name: Cloud | AWS | VPC Report
+    labels:
+      - aws.ec2
+      - aws.vpc
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    execution_environment: TMM AWS EE
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/cloud_report.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+
+  - name: Cloud | AWS | Snapshot EC2
+    labels:
+      - aws.ec2
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/snapshot_ec2.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      _hosts: aws-rhel9:aws-rhel10
+      _hosts_windows: aws-dc:aws_win1
+    limit: all
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          type: multiplechoice
+          variable: aws_region
+          required: true
+          default: us-east-1
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+        - question_name: Specify target hosts
+          type: text
+          variable: _hosts
+          required: false
+          default: aws-rhel9:aws-rhel10
+        - question_name: Specify Windows hosts
+          type: text
+          variable: _hosts_windows
+          required: false
+          default: aws-dc:aws_win1
+
+  - name: Cloud | AWS | Restore EC2 from Snapshot
+    labels:
+      - aws.ec2
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/restore_ec2.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      _hosts: aws-rhel9:aws-rhel10
+      _hosts_windows: aws-dc:aws_win1
+    limit: all
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          type: multiplechoice
+          variable: aws_region
+          required: true
+          default: us-east-1
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+        - question_name: Specify target hosts
+          type: text
+          variable: _hosts
+          required: false
+          default: aws-rhel9:aws-rhel10
+        - question_name: Specify Windows hosts
+          type: text
+          variable: _hosts_windows
+          required: false
+          default: aws-dc:aws_win1
+
+  - name: Cloud | AWS | Display EC2 Stats
+    labels:
+      - aws.ec2
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/display-ec2-stats.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+
+  - name: Cloud | AWS | Delete Stack VM
+    labels:
+      - aws.ec2
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/delete_vm_by_name.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    allow_simultaneous: true
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          type: multiplechoice
+          variable: create_vm_aws_region
+          required: true
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+        - question_name: VM Name
+          type: text
+          variable: create_vm_vm_name
+          required: true
+
+  - name: Cloud | AWS | Delete VPC
+    labels:
+      - aws.vpc
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/delete_vpc.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          type: multiplechoice
+          variable: create_vm_aws_region
+          required: true
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+
+  - name: Cloud | AWS | Delete Keypair
+    labels:
+      - aws.ec2
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - AWS
+    project: Ansible Product Demos
+    playbook: cloud/delete_keypair.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          type: multiplechoice
+          variable: create_vm_aws_region
+          required: true
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+
+  - name: Cloud | AWS | Patch Pre-check RHEL
+    labels:
+      - aws.ec2
+      - patching
+      - rhel
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+      - RHSM Registration
+    project: Ansible Product Demos
+    playbook: cloud/patch_pre_check_rhel.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch RHEL
+    labels:
+      - aws.ec2
+      - patching
+      - rhel
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+      - RHSM Registration
+    project: Ansible Product Demos
+    playbook: cloud/patch_rhel.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch Post-check RHEL
+    labels:
+      - aws.ec2
+      - patching
+      - rhel
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+      - RHSM Registration
+    project: Ansible Product Demos
+    playbook: cloud/patch_post_check_rhel.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch Rollback RHEL
+    labels:
+      - aws.ec2
+      - patching
+      - rhel
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+      - RHSM Registration
+    project: Ansible Product Demos
+    playbook: cloud/patch_rollback_rhel.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch Pre-check Windows
+    labels:
+      - aws.ec2
+      - patching
+      - windows
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+    project: Ansible Product Demos
+    playbook: cloud/patch_pre_check_windows.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch Windows
+    labels:
+      - aws.ec2
+      - patching
+      - windows
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+    project: Ansible Product Demos
+    playbook: cloud/patch_windows.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch Post-check Windows
+    labels:
+      - aws.ec2
+      - patching
+      - windows
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+    project: Ansible Product Demos
+    playbook: cloud/patch_post_check_windows.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch Rollback Windows
+    labels:
+      - aws.ec2
+      - patching
+      - windows
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+    project: Ansible Product Demos
+    playbook: cloud/patch_rollback_windows.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    limit: all
+
+  - name: Cloud | AWS | Patch Compliance Report
+    labels:
+      - aws.ec2
+      - patching
+    job_type: run
+    organization: Ansible Product Demos (APD)
+    credentials:
+      - APD Machine Credential
+      - RHSM Registration
+    project: Ansible Product Demos
+    playbook: cloud/patch_compliance_report.yml
+    inventory: Ansible Product Demos Inventory
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    use_fact_cache: true
+    extra_vars:
+      _hosts: aws-rhel9:aws-rhel10
+      _hosts_windows: aws-dc:aws_win1
+      _report_server: reports
+    limit: all
+
+controller_workflows:
+  - name: Deploy Cloud Stack in AWS
+    description: A workflow to deploy a cloud stack
+    labels:
+      - aws.ec2
+      - aws.vpc
+      - rhel
+      - windows
+    organization: Ansible Product Demos (APD)
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      aws_key_name: aws-test-key
+      create_vm_aws_keypair_name: aws-test-key
+      create_vm_aws_securitygroup_name: aws-test-sg
+      create_vm_aws_vpc_subnet_name: aws-test-subnet
+      create_vm_vm_deployment: cloud_stack
+      create_vm_vm_purpose: demo
+      create_vm_apd_managed_by: aap-product-demos
+      create_vm_apd_demo_tag: "true"
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          question_description: >-
+            AWS region where the VPC, keypair, and all VMs will be created.
+          type: multiplechoice
+          variable: create_vm_aws_region
+          required: true
+          default: us-east-2
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+        - question_name: Owner
+          question_description: >-
+            Value for the EC2 tag key "owner" on all resources this workflow
+            creates. Use your name or team for cost attribution; appears in
+            inventory keyed groups as owner_*.
+          type: text
+          variable: create_vm_aws_owner_tag
+          required: true
+          default: your_name
+        - question_name: Environment
+          question_description: >-
+            Value for the EC2 tag key "environment" on each VM (Dev, QA, or
+            Prod). Metadata only—it does not change instance size, patching, or
+            security settings.
+          type: multiplechoice
+          variable: vm_environment
+          required: true
+          default: Prod
+          choices:
+            - Dev
+            - QA
+            - Prod
+        - question_name: Email
+          question_description: >-
+            Operator contact at launch. Not written to EC2 tags and not consumed
+            by the deploy playbooks today; kept for optional demo-environment
+            tracking. Replace the default with your address.
+          type: text
+          variable: email
+          required: true
+          default: your_name@acme.org
+    simplified_workflow_nodes:
+      - identifier: Create Keypair
+        unified_job_template: Cloud | AWS | Create Keypair
+        success_nodes:
+          - EC2 Stats
+        failure_nodes:
+          - Ticket - Keypair Failed
+      - identifier: Create VPC
+        unified_job_template: Cloud | AWS | Create VPC
+        success_nodes:
+          - EC2 Stats
+        failure_nodes:
+          - Ticket - VPC Failed
+      - identifier: Ticket - Keypair Failed
+        unified_job_template: 'SUBMIT FEEDBACK'
+        extra_data:
+          feedback: Failed to create AWS keypair
+      - identifier: EC2 Stats
+        unified_job_template: Cloud | AWS | Display EC2 Stats
+        all_parents_must_converge: true
+        always_nodes:
+          - Deploy Windows GUI Blueprint
+          - Deploy RHEL9 Blueprint
+          - Deploy RHEL10 Blueprint
+          - Deploy Windows Core Blueprint
+          - Deploy Report Server
+      - identifier: Deploy Windows GUI Blueprint
+        unified_job_template: Cloud | AWS | Create VM
+        extra_data:
+          create_vm_vm_name: aws-dc
+          vm_blueprint: windows_full
+        success_nodes:
+          - Update Inventory
+        failure_nodes:
+          - Ticket - Instance Failed
+      - identifier: Deploy Windows Core Blueprint
+        unified_job_template: Cloud | AWS | Create VM
+        extra_data:
+          create_vm_vm_name: aws_win1
+          vm_blueprint: windows_core
+        success_nodes:
+          - Update Inventory
+        failure_nodes:
+          - Ticket - Instance Failed
+      - identifier: Deploy RHEL9 Blueprint
+        unified_job_template: Cloud | AWS | Create VM
+        extra_data:
+          create_vm_vm_name: aws-rhel9
+          vm_blueprint: rhel9
+        success_nodes:
+          - Update Inventory
+        failure_nodes:
+          - Ticket - Instance Failed
+      - identifier: Deploy RHEL10 Blueprint
+        unified_job_template: Cloud | AWS | Create VM
+        extra_data:
+          create_vm_vm_name: aws-rhel10
+          vm_blueprint: rhel10
+        success_nodes:
+          - Update Inventory
+        failure_nodes:
+          - Ticket - Instance Failed
+      - identifier: Deploy Report Server
+        unified_job_template: Cloud | AWS | Create VM
+        extra_data:
+          create_vm_vm_name: reports
+          vm_blueprint: rhel9
+        success_nodes:
+          - Update Inventory
+        failure_nodes:
+          - Ticket - Instance Failed
+      - identifier: Update Inventory
+        unified_job_template: AWS Inventory
+        success_nodes:
+          - Publish VPC Report
+      - identifier: Ticket - Instance Failed
+        unified_job_template: 'SUBMIT FEEDBACK'
+        extra_data:
+          feedback: Failed to create AWS instance
+      - identifier: Publish VPC Report
+        unified_job_template: Cloud | AWS | VPC Report
+      - identifier: Ticket - VPC Failed
+        unified_job_template: 'SUBMIT FEEDBACK'
+        extra_data:
+          feedback: Failed to create AWS VPC
+
+  - name: Destroy Cloud Stack in AWS
+    description: Tear down the cloud stack VMs, VPC, and keypair created by Deploy Cloud Stack in AWS
+    labels:
+      - aws.ec2
+      - aws.vpc
+      - rhel
+      - windows
+    organization: Ansible Product Demos (APD)
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          question_description: >-
+            AWS region where the cloud stack was deployed.
+          type: multiplechoice
+          variable: create_vm_aws_region
+          required: true
+          default: us-east-2
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+    simplified_workflow_nodes:
+      - identifier: Delete Windows GUI VM
+        unified_job_template: Cloud | AWS | Delete Stack VM
+        extra_data:
+          create_vm_vm_name: aws-dc
+        success_nodes:
+          - Update Inventory
+      - identifier: Delete Windows Core VM
+        unified_job_template: Cloud | AWS | Delete Stack VM
+        extra_data:
+          create_vm_vm_name: aws_win1
+        success_nodes:
+          - Update Inventory
+      - identifier: Delete RHEL9 VM
+        unified_job_template: Cloud | AWS | Delete Stack VM
+        extra_data:
+          create_vm_vm_name: aws-rhel9
+        success_nodes:
+          - Update Inventory
+      - identifier: Delete RHEL10 VM
+        unified_job_template: Cloud | AWS | Delete Stack VM
+        extra_data:
+          create_vm_vm_name: aws-rhel10
+        success_nodes:
+          - Update Inventory
+      - identifier: Delete Report Server
+        unified_job_template: Cloud | AWS | Delete Stack VM
+        extra_data:
+          create_vm_vm_name: reports
+        success_nodes:
+          - Update Inventory
+      - identifier: Update Inventory
+        unified_job_template: AWS Inventory
+        all_parents_must_converge: true
+        success_nodes:
+          - Delete Keypair
+          - Delete VPC
+      - identifier: Delete Keypair
+        unified_job_template: Cloud | AWS | Delete Keypair
+        all_parents_must_converge: true
+      - identifier: Delete VPC
+        unified_job_template: Cloud | AWS | Delete VPC
+        all_parents_must_converge: true
+
+  - name: Patch Cloud Stack in AWS
+    description: >-
+      Snapshot, pre-check, patch, post-check (or rollback on failure), and
+      compliance report for both RHEL and Windows EC2 instances.
+      Based on jopaik/patch_demo.
+    labels:
+      - aws.ec2
+      - aws.vpc
+      - patching
+      - rhel
+      - windows
+    organization: Ansible Product Demos (APD)
+    allow_simultaneous: true
+    notification_templates_started: Telemetry
+    notification_templates_success: Telemetry
+    notification_templates_error: Telemetry
+    extra_vars:
+      _hosts: aws-rhel9:aws-rhel10
+      _hosts_windows: aws-dc:aws_win1
+      _report_server: reports
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: AWS Region
+          type: multiplechoice
+          variable: aws_region
+          required: true
+          default: us-east-2
+          choices:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+        - question_name: RHEL hosts
+          question_description: >-
+            Workload VMs to snapshot and patch on the RHEL path.
+            Default is aws-rhel9:aws-rhel10. Does not include reports or aws_kafka.
+          type: text
+          variable: _hosts
+          required: true
+          default: aws-rhel9:aws-rhel10
+        - question_name: Windows hosts
+          question_description: >-
+            Workload VMs to snapshot and patch on the Windows path.
+            Default is aws-dc:aws_win1 (both cloud-stack Windows hosts).
+          type: text
+          variable: _hosts_windows
+          required: true
+          default: aws-dc:aws_win1
+        - question_name: Report server
+          question_description: >-
+            Host that publishes the HTML compliance dashboard. Not patched.
+            Default is reports.
+          type: text
+          variable: _report_server
+          required: true
+          default: reports
+        - question_name: RHEL Advisory IDs (comma-separated)
+          type: text
+          variable: input_cve_ids
+          required: false
+          default: "RHSA-2024:3138, CVE-2024-33599"
+        - question_name: Windows KB IDs (comma-separated)
+          type: text
+          variable: input_kb_ids
+          required: false
+          default: "KB5044284, KB5044030"
+    simplified_workflow_nodes:
+      - identifier: Take Snapshot
+        unified_job_template: Cloud | AWS | Snapshot EC2
+        success_nodes:
+          - Pre-check RHEL
+          - Pre-check Windows
+      - identifier: Pre-check RHEL
+        unified_job_template: Cloud | AWS | Patch Pre-check RHEL
+        success_nodes:
+          - Patch RHEL
+      - identifier: Pre-check Windows
+        unified_job_template: Cloud | AWS | Patch Pre-check Windows
+        success_nodes:
+          - Patch Windows
+      - identifier: Patch RHEL
+        unified_job_template: Cloud | AWS | Patch RHEL
+        success_nodes:
+          - Post-check RHEL
+        failure_nodes:
+          - Restore RHEL
+      - identifier: Patch Windows
+        unified_job_template: Cloud | AWS | Patch Windows
+        success_nodes:
+          - Post-check Windows
+        failure_nodes:
+          - Restore Windows
+      - identifier: Post-check RHEL
+        unified_job_template: Cloud | AWS | Patch Post-check RHEL
+        always_nodes:
+          - Compliance Report
+      - identifier: Restore RHEL
+        unified_job_template: Cloud | AWS | Restore EC2 from Snapshot
+      - identifier: Post-check Windows
+        unified_job_template: Cloud | AWS | Patch Post-check Windows
+        always_nodes:
+          - Compliance Report
+      - identifier: Restore Windows
+        unified_job_template: Cloud | AWS | Restore EC2 from Snapshot
+      - identifier: Compliance Report
+        unified_job_template: Cloud | AWS | Patch Compliance Report
+        extra_data:
+          _report_server: reports
+        limit: all
+        all_parents_must_converge: true

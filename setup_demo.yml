@@ -1,0 +1,92 @@
+---
+- name: Setup common prerequisites
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - ansible.controller
+
+  # vars_files should be scoped to a play so variables defined in the
+  # files should not be available in subsequent plays, so certain
+  # resources won't be retried
+  vars_files:
+    - common/setup.yml
+
+  tasks:
+    - name: Create reusable deployment ID
+      ansible.builtin.set_fact:
+        _deployment_id: '{{ lookup("ansible.builtin.password", "{{ playbook_dir }}/.deployment_id", chars=["ascii_lowercase", "digits"], length=5) }}'
+
+    # aws_* leaves must exist before os_linux / os_windows parents reference
+    # them. dispatch -> groups fires the full list async with loop_delay 0,
+    # so a single pass races on a fresh controller (#365).
+    # Pass an explicit list (do not filter controller_groups): selectattr
+    # re-templates the whole list and blows up on !unsafe Jinja in other groups.
+    - name: Create AWS leaf inventory groups before parent groups
+      ansible.builtin.include_role:
+        name: infra.controller_configuration.groups
+      vars:
+        controller_dependency_check: false  # noqa: var-naming[no-role-prefix]
+        controller_groups:
+          - name: aws_rhel
+            inventory: Ansible Product Demos Inventory
+          - name: aws_linux
+            inventory: Ansible Product Demos Inventory
+          - name: aws_windows
+            inventory: Ansible Product Demos Inventory
+
+    - name: Create common demo resources
+      ansible.builtin.include_role:
+        name: infra.controller_configuration.dispatch
+      vars:
+        controller_dependency_check: false  # noqa: var-naming[no-role-prefix]
+
+- name: Setup demo
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - ansible.controller
+  tasks:
+    - name: Include configuration for {{ demo }}
+      ansible.builtin.include_vars: "{{ demo }}/setup.yml"
+
+    - name: Load AAP 2.4 dispatcher roles when this demo excludes some
+      when: aap_configuration_dispatcher_exclude_roles | default([]) | length > 0
+      ansible.builtin.include_vars:
+        file: common/controller-dispatch-roles.yml
+
+    - name: Honor dispatcher excludes on AAP 2.4
+      when: aap_configuration_dispatcher_exclude_roles | default([]) | length > 0
+      ansible.builtin.set_fact:
+        controller_configuration_dispatcher_roles: >-
+          {{
+            controller_configuration_dispatcher_roles
+            | rejectattr('role', 'in', _excluded_dispatch_roles)
+            | list
+          }}
+      vars:
+        _exclude_names: "{{ aap_configuration_dispatcher_exclude_roles }}"
+        _excluded_dispatch_roles: >-
+          {{
+            _exclude_names
+            + (_exclude_names | map('regex_replace', '^controller_', '') | list)
+          }}
+
+    - name: Demo Components
+      ansible.builtin.include_role:
+        name: infra.controller_configuration.dispatch
+      vars:
+        controller_dependency_check: false  # noqa: var-naming[no-role-prefix]
+
+    - name: Log Demo
+      ansible.builtin.uri:
+        url: https://docs.google.com/forms/d/e/1FAIpQLSdIZ77YpETjEfGOoYlXtMnQiU-6M7QFlb2hJA4ujo25QYb2jw/formResponse
+        method: POST
+        body: "ifq&entry.1569353616={{ demo }} &entry.498055740={{ lookup('ansible.builtin.env', 'AWX_HOST') }}&sumbit=Submit"
+      ignore_errors: true  # noqa: ignore-errors - connectivity should not fail play
+
+    - name: Print Message
+      ansible.builtin.debug:
+        msg: "{{ user_message }}"
+      when: user_message is defined
+
+...

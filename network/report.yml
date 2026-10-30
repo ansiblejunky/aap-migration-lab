@@ -1,0 +1,28 @@
+---
+- name: Collect the selected network devices
+  hosts: "{{ _hosts | default('containerlab') }}"
+  gather_facts: false
+  pre_tasks:
+    - name: Record the exact device selection for this report
+      ansible.builtin.set_fact:
+        network_report_selected_hosts: "{{ ansible_play_hosts_all }}"
+      run_once: true
+      delegate_to: localhost
+      delegate_facts: true
+  roles:
+    - role: demo.network.gather_report
+
+- name: Publish the detailed network report on the hypervisor
+  hosts: "{{ _report_server | default('clab_containerlab') }}"
+  become: true
+  gather_facts: true
+  pre_tasks:
+    - name: Require devices selected in this job
+      ansible.builtin.assert:
+        that:
+          - hostvars['localhost'].network_report_selected_hosts | default([]) | length > 0
+        fail_msg: No devices matched the requested inventory selection.
+  roles:
+    - role: demo.network.containerlab
+    - role: demo.network.report_server
+    - role: demo.network.build_report

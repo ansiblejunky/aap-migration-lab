@@ -1,0 +1,10 @@
+---
+- name: Create AWS keypair
+  hosts: localhost
+  vars:
+    aws_key_name: aws-test-key
+    aws_keypair_owner: "{{ create_vm_aws_owner_tag | default(create_vm_vm_owner | default('apd-demo')) }}"
+
+  tasks:
+    - name: Ensure AWS keypair exists in EC2
+      ansible.builtin.include_tasks: tasks/ensure_aws_keypair.yml

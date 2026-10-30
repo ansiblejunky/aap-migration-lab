@@ -1,0 +1,145 @@
+---
+- name: Install Ansible Product Demos on AAP 2.4
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - ansible.controller
+
+  vars:
+    # AAP 2.4 automation controller reads CONTROLLER_* (and the variables below).
+    # There is no platform gateway and no /api/gateway/v1/ endpoint.
+    aap_hostname: '{{ lookup("env", "AAP_HOSTNAME") }}'
+    aap_username: '{{ lookup("env", "AAP_USERNAME") }}'
+    aap_password: '{{ lookup("env", "AAP_PASSWORD") }}'
+    aap_token: '{{ lookup("env", "AAP_TOKEN") }}'
+    aap_validate_certs: '{{ lookup("env", "AAP_VALIDATE_CERTS") | default("false", true) | bool }}'
+    _controller_hostname: >-
+      {{
+        aap_hostname
+        | regex_replace('/+$', '')
+        | regex_replace('/api(/v2)?/?$', '')
+      }}
+
+  tasks:
+    - name: Make sure AAP credential environment variables are set
+      ansible.builtin.assert:
+        that:
+          - aap_hostname | length > 0
+          - aap_token | length > 0 or (aap_username | length > 0 and aap_password | length > 0)
+        fail_msg: |
+          Please ensure the following environment variables are set:
+            export AAP_HOSTNAME=https://your-aap-controller.example.com
+            # either a token for authentication
+            export AAP_TOKEN=<admin-token>
+            # or a username and password for basic auth
+            export AAP_USERNAME=admin  # or another user with controller superuser privileges
+            export AAP_PASSWORD=<admin-user-password>
+
+    - name: Map installer auth to automation controller connection variables
+      ansible.builtin.set_fact:
+        controller_hostname: "{{ _controller_hostname }}"
+        controller_validate_certs: "{{ aap_validate_certs | bool }}"
+
+    - name: Map controller username
+      ansible.builtin.set_fact:
+        controller_username: "{{ aap_username }}"
+      when: aap_username | length > 0
+
+    - name: Map controller password
+      ansible.builtin.set_fact:
+        controller_password: "{{ aap_password }}"
+      when: aap_password | length > 0
+      no_log: true
+
+    - name: Map controller OAuth token
+      ansible.builtin.set_fact:
+        controller_oauthtoken: "{{ aap_token }}"
+      when: aap_token | length > 0
+      no_log: true
+
+    - name: Query automation controller version from the API
+      ansible.builtin.uri:
+        url: "{{ controller_hostname }}/api/v2/ping/"
+        method: GET
+        validate_certs: "{{ aap_validate_certs | bool }}"
+        url_username: "{{ aap_username if aap_username | length > 0 else omit }}"
+        url_password: "{{ aap_password if aap_password | length > 0 else omit }}"
+        force_basic_auth: "{{ aap_token | length == 0 }}"
+        headers: "{{ {'Authorization': 'Bearer ' + aap_token} if aap_token | length > 0 else {} }}"
+        status_code: [200]
+      register: _controller_ping
+
+    - name: Require an AAP 2.4 automation controller
+      ansible.builtin.assert:
+        that:
+          - _controller_ping.json.version is defined
+          - _controller_ping.json.version is version('4.4', '>=')
+          - _controller_ping.json.version is version('4.6', '<')
+        fail_msg: |
+          This branch installs Ansible Product Demos on AAP 2.4 only.
+          Automation controller 4.4 and 4.5 are the controller releases for AAP 2.4.
+          {{ controller_hostname }}/api/v2/ping/ reported version
+          '{{ _controller_ping.json.version | default('unknown') }}'.
+          AAP 2.5 and later use the platform gateway. Use upstream main for those.
+
+    - name: Record platform version used for the execution environment image
+      ansible.builtin.set_fact:
+        _aap_version: "2.4"
+        _controller_version: "{{ _controller_ping.json.version }}"
+
+    - name: Include APD bootstrap variables
+      ansible.builtin.include_vars:
+        file: common/bootstrap-vars.yml
+
+    - name: Skip apd-admin when the install is token-only
+      when: aap_password | default('') | length == 0
+      ansible.builtin.set_fact:
+        controller_user_accounts: []
+        controller_roles: []
+
+    - name: Add only the auth fields that were provided to the AAP credential
+      ansible.builtin.set_fact:
+        controller_credentials: >-
+          {{
+            [aap_credential]
+            + (controller_credentials | rejectattr('name', 'equalto', 'AAP Credential') | list)
+          }}
+      vars:
+        aap_auth_inputs: >-
+          {{
+            {
+              'host': controller_hostname,
+              'verify_ssl': aap_validate_certs | bool
+            }
+            | combine(({'username': aap_username} if aap_username | length > 0 else {}))
+            | combine(({'password': aap_password} if aap_password | length > 0 else {}))
+            | combine(({'oauth_token': aap_token} if aap_token | length > 0 else {}))
+          }}
+        aap_credential: >-
+          {{
+            (controller_credentials | selectattr('name', 'equalto', 'AAP Credential') | list | first)
+            | combine({'inputs': aap_auth_inputs})
+          }}
+      no_log: true
+
+    - name: Require a git remote that publishes this aap-2.4 branch
+      ansible.builtin.assert:
+        that:
+          - >-
+            'github.com/ansible/product-demos' not in apd_git_repo
+            or apd_git_repo_branch != 'aap-2.4'
+        fail_msg: |
+          The controller project syncs apd_git_repo @ apd_git_repo_branch, and the
+          aap-2.4 branch is not published on https://github.com/ansible/product-demos.
+          Push this branch to a repository the controller can clone, then re-run with:
+            export APD_GIT_REPO=https://github.com/<you>/aap-product-demos
+            export APD_GIT_REPO_BRANCH=aap-2.4
+
+    - name: Run dispatcher to create APD resources
+      ansible.builtin.include_role:
+        name: infra.controller_configuration.dispatch
+      vars:
+        controller_dependency_check: false  # noqa: var-naming[no-role-prefix]
+
+...
+# vim ft=yaml.ansible

@@ -1,0 +1,43 @@
+---
+#######
+# AWS VARS
+#######
+aws_vpc_name: ansible
+aws_vpc_prefix: demo
+aws_vpc_cidr_block: 10.0.0.0/16
+aws_subnet_cidr: 10.0.1.0/24
+aws_region: us-east-1
+aws_vm_name: "{{ vm_name }}"
+aws_vm_owner: "{{ vm_owner }}"
+aws_blueprint: "{{ vm_blueprint }}"
+# aws_image_filter: "{{ omit }}"
+# aws_instance_size: "{{ omit }}"
+# aws_image_architecture: "{{ omit }}"
+# aws_image_owners: "{{ omit }} "
+aws_userdata_template: default
+aws_keypair_name: "{{ aws_vpc_name }}-{{ aws_vpc_prefix }}-demo-key"
+aws_securitygroup_name: "{{ aws_vpc_name }}-{{ aws_vpc_prefix }}-sec-group"
+aws_env_tag: prod
+aws_purpose_tag: ansible_demo
+aws_ansiblegroup_tag: cloud
+aws_ec2_wait: true
+aws_snapshots: {}
+
+#######
+# CREATE VM VARS
+#######
+create_vm_vm_blueprint: ""
+create_vm_aws_region: us-east-1
+create_vm_aws_instance_size: t2.micro
+create_vm_aws_tenancy: default
+create_vm_aws_ec2_wait: true
+create_vm_aws_userdata_template: default
+create_vm_vm_name: demo_vm
+create_vm_vm_deployment: default
+create_vm_vm_environment: default
+create_vm_vm_owner: ansible
+create_vm_vm_purpose: demo
+create_vm_apd_managed_by: aap-product-demos
+create_vm_apd_demo_tag: "true"
+create_vm_aws_image_filter: 'RHEL-9*HVM-*Hourly*'
+create_vm_aws_image_architecture: x86_64

@@ -1,0 +1,7 @@
+---
+# Installed into the project environment on sync. The AAP 2.4 supported
+# execution environment already provides ansible.controller 4.5.
+collections:
+  - name: infra.controller_configuration
+    version: "2.11.0"
+...
