@@ -1,11 +1,13 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Dev Spaces](https://img.shields.io/badge/Customize%20Here-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://workspaces.openshift.com/f?url=https://github.com/ansible/product-demos)
 
-# APD - Ansible Product Demos
+# AAP Migration Lab
 
-The Ansible Product Demos (APD) project is a set of Ansible demos that run on the [Red Hat Ansible Automation Platform](https://www.redhat.com/en/technologies/management/ansible) (AAP).  These demos are deployed using configuraton-as-code and playbooks that create AAP resources (such as projects, templates, and credentials) meant for demonstrating automation use cases in several technology domains.
+This repository prepares a source Ansible Automation Platform environment so Red Hat employees can test and teach migration. The demo catalog below is the workload loaded onto that source environment before a migration. A later web wizard will check the source environment and advise which target environments are supported. Instructions for the base topology will be added separately.
 
-> **This branch targets AAP 2.4** (automation controller 4.4 or 4.5). Upstream `main` targets AAP 2.5 and later and talks to the platform gateway. Install with `install-apd.yml` against the controller API, using an execution environment built from `execution_environments/apd-ee-24.yml`.
+The content is deployed as configuration-as-code. On the controller it creates an organization and project named **AAP Migration Lab**, then the demo job templates and inventories.
+
+> **This branch targets AAP 2.4** (automation controller 4.4 or 4.5). Upstream [ansible/product-demos](https://github.com/ansible/product-demos) `main` targets AAP 2.5 and later and talks to the platform gateway. Install with `install-apd.yml` against the controller API, using an execution environment built from `execution_environments/apd-ee-24.yml`.
 
 | Demo Name | Description |
 |-----------|-------------|
@@ -23,9 +25,9 @@ Browse all demos, presenter guides, and walkthroughs on the **[Ansible Product D
 
 ## Installation
 
-APD can be added to an existing AAP 2.4 deployment by running the installation playbook. The playbook talks to the automation controller at `/api/v2/` and applies configuration with `infra.controller_configuration` 2.11. It does not use the platform gateway.
+The lab can be added to an existing AAP 2.4 deployment by running the installation playbook. The playbook talks to the automation controller at `/api/v2/` and applies configuration with `infra.controller_configuration` 2.11. It does not use the platform gateway.
 
-Build the AAP 2.4 execution environment before installing. `quay.io/ansible-product-demos/apd-ee-24` is not published upstream. The controller also pulls that image when it syncs the Ansible Product Demos project, so the image must be in a registry the controller can reach. Override the image with `APD_EE_IMAGE` if you push it somewhere other than the default name.
+Build the AAP 2.4 execution environment before installing, or point `APD_EE_IMAGE` at an image the controller can already pull. The published `quay.io/ansible-product-demos/apd-ee-24` image is one option. The controller pulls that image when it syncs the **AAP Migration Lab** project.
 
 ### Build the execution environment
 
@@ -43,10 +45,10 @@ export APD_EE_IMAGE=quay.io/<your-registry>/apd-ee-24:latest
 
 ### Publish this branch
 
-The controller project clones `APD_GIT_REPO` at `APD_GIT_REPO_BRANCH` (default `aap-2.4`). That branch is not on `github.com/ansible/product-demos`. Push this branch to a git remote the controller can read, then:
+The controller project clones `APD_GIT_REPO` at `APD_GIT_REPO_BRANCH` (default `aap-2.4` on `https://github.com/ansiblejunky/aap-migration-lab`). That branch is not on `github.com/ansible/product-demos`. Push this branch to a git remote the controller can read, then:
 
 ```bash
-export APD_GIT_REPO=https://github.com/<you>/aap-product-demos
+export APD_GIT_REPO=https://github.com/ansiblejunky/aap-migration-lab
 export APD_GIT_REPO_BRANCH=aap-2.4
 ```
 
@@ -84,7 +86,7 @@ ansible-navigator run install-apd.yml \
   -e aap_username=admin \
   -e aap_password='your-password' \
   -e '{"aap_validate_certs": false}' \
-  -e apd_git_repo=https://github.com/<you>/aap-product-demos \
+  -e apd_git_repo=https://github.com/ansiblejunky/aap-migration-lab \
   -e apd_git_repo_branch=aap-2.4 \
   -e apd_ee_image=quay.io/<your-registry>/apd-ee-24:latest \
   -m stdout
@@ -106,15 +108,13 @@ Controller API calls in the Mattermost and Automation Orchestrator tasks use `/a
 
 For Red Hat associates and partners, there is an Ansible Product Demos catalog item [available on demo.redhat.com](https://red.ht/apd-sandbox) that provides a pre-installed environment for demo purposes.  An existing account is required for access to the Red Hat Demo Platform system.
 
-## Bring Your Own Demo
+## Customize the lab
 
-Can't find what you're looking for? Customize this repo to make it your own.
+1. Fork [aap-migration-lab](https://github.com/ansiblejunky/aap-migration-lab).
+2. Point the **AAP Migration Lab** project on the controller at that fork.
+3. Change the fork as needed and run **APD | Single demo setup**.
 
-1. Create a fork of this repo.
-2. Update the URL of the `Ansible Project Demos` project your Ansible Automation Platform controller.
-3. Make changes to your fork as needed and run the **Product Demos | Single demo setup** job
-
-See the [contributing guide](CONTRIBUTING.md) for more details on how to customize the project.
+See the [contributing guide](CONTRIBUTING.md) for how the demo content is structured.
 
 ---
 

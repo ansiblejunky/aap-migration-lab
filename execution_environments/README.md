@@ -1,6 +1,6 @@
-# Execution Environment Images for Ansible Product Demos
+# Execution environment images
 
-When the Ansible Product Demos setup job template is run, it creates a number of execution environment definitions on the automation controller. This branch builds the AAP 2.4 image from [`apd-ee-24.yml`](apd-ee-24.yml) and [`requirements-24.yml`](requirements-24.yml). `./build.sh` defaults to `quay.io/ansible-product-demos/apd-ee-24`. Publish that image to a registry the controller can pull before running `install-apd.yml`.
+When the lab setup job template is run, it creates a number of execution environment definitions on the automation controller. This branch builds the AAP 2.4 image from [`apd-ee-24.yml`](apd-ee-24.yml) and [`requirements-24.yml`](requirements-24.yml). `./build.sh` defaults to `quay.io/ansible-product-demos/apd-ee-24`. Publish that image to a registry the controller can pull before running `install-apd.yml`.
 
 The base image is `registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel9:latest`. Use the current stream (ansible-core 2.16, Python 3.12). Collection pins follow the AAP 2.4 row of the [configuration-as-code matrix](https://access.redhat.com/articles/7143507): `ansible.controller` 4.5.x and `infra.controller_configuration` 2.11.x. `ansible.platform` and `infra.aap_configuration` are omitted because they target the 2.5+ gateway.
 

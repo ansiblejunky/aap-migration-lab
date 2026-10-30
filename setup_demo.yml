@@ -4,6 +4,9 @@
   gather_facts: false
   collections:
     - ansible.controller
+  vars:
+    # verify talks to Galaxy and fails for ansible.controller, which ships in the EE.
+    controller_dependency_check: false
 
   # vars_files should be scoped to a play so variables defined in the
   # files should not be available in subsequent plays, so certain
@@ -45,6 +48,8 @@
   gather_facts: false
   collections:
     - ansible.controller
+  vars:
+    controller_dependency_check: false
   tasks:
     - name: Include configuration for {{ demo }}
       ansible.builtin.include_vars: "{{ demo }}/setup.yml"

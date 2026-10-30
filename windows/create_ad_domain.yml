@@ -78,7 +78,7 @@
       ansible.controller.credential:
         name: Kerberos Credential
         credential_type: Kerberos
-        organization: Ansible Product Demos (APD)
+        organization: AAP Migration Lab
         inputs:
           username: "{{ ansible_user }}@{{ domain_name | upper }}"
           password: "{{ ansible_password }}"
@@ -91,7 +91,7 @@
       ansible.controller.credential:
         name: Microsoft AD LDAP Credential
         credential_type: Microsoft AD LDAP
-        organization: Ansible Product Demos (APD)
+        organization: AAP Migration Lab
         inputs:
           username: "{{ ansible_user }}@{{ domain_name | upper }}"
           password: "{{ ansible_password }}"

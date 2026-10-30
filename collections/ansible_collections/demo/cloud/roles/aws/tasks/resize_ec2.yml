@@ -8,7 +8,7 @@
     controller_inventory_sources:
       - name: AWS Inventory
         inventory: Ansible Product Demos Inventory
-        organization: Ansible Product Demos (APD)
+        organization: AAP Migration Lab
         wait: true
   block:
     - name: AWS | RESIZE EC2 | assert required vars

@@ -86,14 +86,14 @@ controller_credential_types:
 controller_credentials:
   - name: ROSA Token
     credential_type: ROSA Token
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
       rosa_token: REPLACEME
   - name: Mattermost
     credential_type: Mattermost
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     description: >-
       Updated automatically by Infrastructure | AWS - Provision Mattermost.
     update_secrets: false
@@ -103,7 +103,7 @@ controller_credentials:
       api_chat_token: REPLACEME
   - name: LiteMaaS
     credential_type: LiteMaaS
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     description: >-
       Pre-filled on demo.redhat.com. AO Install wires this into Automation
       Orchestrator as an LLM Provider integration for agentic workflow nodes.
@@ -115,7 +115,7 @@ controller_credentials:
       virtual_key: REPLACEME
       model: qwen3-235b
   - name: OpenShift Credential
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: OpenShift or Kubernetes API Bearer Token
     update_secrets: false
     state: exists
@@ -127,11 +127,11 @@ controller_credentials:
 controller_execution_environments:
   - name: ROSA Lifecycle EE
     image: quay.io/acme_corp/rosa-ee:latest
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     pull: missing
   - name: AO Execution Environment
     image: quay.io/acme_corp/ao-ee:latest
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
 
 controller_templates:
   - name: Infrastructure | ROSA - Preflight Checks
@@ -143,12 +143,12 @@ controller_templates:
       - openshift
       - infrastructure
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     execution_environment: ROSA Lifecycle EE
     credentials:
       - AWS
       - ROSA Token
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/rosa/preflight.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -186,12 +186,12 @@ controller_templates:
       - openshift
       - infrastructure
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     execution_environment: ROSA Lifecycle EE
     credentials:
       - AWS
       - ROSA Token
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/rosa/create.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -264,12 +264,12 @@ controller_templates:
       - openshift
       - infrastructure
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     execution_environment: ROSA Lifecycle EE
     credentials:
       - AWS
       - ROSA Token
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/rosa/wait.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -307,12 +307,12 @@ controller_templates:
       - openshift
       - infrastructure
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     execution_environment: ROSA Lifecycle EE
     credentials:
       - AWS
       - ROSA Token
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/rosa/destroy.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -350,7 +350,7 @@ controller_templates:
       - orchestrator
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "infrastructure/ao/install.yml"
     execution_environment: AO Execution Environment
     notification_templates_started: Telemetry
@@ -374,7 +374,7 @@ controller_templates:
       - orchestrator
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "infrastructure/ao/uninstall.yml"
     execution_environment: AO Execution Environment
     notification_templates_started: Telemetry
@@ -394,7 +394,7 @@ controller_templates:
       - orchestrator
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "infrastructure/ao/network-access.yml"
     execution_environment: AO Execution Environment
     notification_templates_started: Telemetry
@@ -412,7 +412,7 @@ controller_templates:
       - openshift
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "infrastructure/hashicorp_vault.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -446,11 +446,11 @@ controller_templates:
       - openshift
       - policy-as-code
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - OpenShift Credential
       - AAP Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/opa/deploy-opa.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -484,10 +484,10 @@ controller_templates:
       - infrastructure
       - policy-as-code
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - OpenShift Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/opa/add-policy.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -527,7 +527,7 @@ controller_templates:
       - infrastructure
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/acme-app/playbooks/setup.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -568,7 +568,7 @@ controller_templates:
       - infrastructure
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/acme-app/playbooks/configure.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -655,11 +655,11 @@ controller_templates:
       - eda
       - infrastructure
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - APD Machine Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/config-drift/playbooks/provision_kafka.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -713,12 +713,12 @@ controller_templates:
       - infrastructure
       - orchestrator
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - APD Machine Credential
       - AAP Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/mattermost/provision_mattermost.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -772,7 +772,7 @@ controller_templates:
       - rhel
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/config-drift/playbooks/deploy_audit_filebeat.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -813,7 +813,7 @@ controller_templates:
       - rhel
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/config-drift/playbooks/drift_sshd.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -844,10 +844,10 @@ controller_templates:
       - eda
       - infrastructure
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AAP Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/config-drift/playbooks/setup_eda_activation.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -864,7 +864,7 @@ controller_templates:
       - rhel
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/config-drift/playbooks/remediate_sshd.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -883,9 +883,9 @@ controller_templates:
       - eda
       - infrastructure
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/config-drift/playbooks/check_cloud_stack.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -899,11 +899,11 @@ controller_templates:
       - infrastructure
       - openshift
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
     credentials:
       - OpenShift Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/aap-mcp-operator.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -940,11 +940,11 @@ controller_templates:
       - infrastructure
       - openshift
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
     credentials:
       - OpenShift Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/aap-mcp-operator-disable.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -978,11 +978,11 @@ controller_templates:
       - infrastructure
       - openshift
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
     credentials:
       - OpenShift Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: infrastructure/openflake/provision.yml
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -1030,7 +1030,7 @@ controller_workflows:
     labels:
       - aws.rosa
       - infrastructure
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -1130,7 +1130,7 @@ controller_workflows:
     labels:
       - aws.rosa
       - infrastructure
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -1179,7 +1179,7 @@ controller_workflows:
       - compliance
       - eda
       - infrastructure
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -1233,14 +1233,14 @@ controller_workflows:
         unified_job_template:
           name: Infrastructure | Config Drift - Check Cloud Stack
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
       - identifier: Cloud Stack Required
         unified_job_template:
           name: SUBMIT FEEDBACK
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
         extra_data:
@@ -1255,7 +1255,7 @@ controller_workflows:
         unified_job_template:
           name: Infrastructure | AWS - Provision Kafka Queue
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
       - identifier: Sync Inventory
@@ -1266,7 +1266,7 @@ controller_workflows:
           inventory:
             name: Ansible Product Demos Inventory
             organization:
-              name: Ansible Product Demos (APD)
+              name: AAP Migration Lab
               type: organization
             type: inventory
           name: AWS Inventory
@@ -1278,7 +1278,7 @@ controller_workflows:
         unified_job_template:
           name: LINUX | Config Drift - Deploy Audit and Filebeat
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
         extra_data:
@@ -1288,6 +1288,6 @@ controller_workflows:
         unified_job_template:
           name: Infrastructure | Setup Rulebook for Kafka Queue - Config Drift & Remediation
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template

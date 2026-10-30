@@ -129,7 +129,7 @@
     - name: Save private key to AAP credential  # noqa: no-handler
       ansible.controller.credential:
         name: Containerlab SSH
-        organization: Ansible Product Demos (APD)
+        organization: AAP Migration Lab
         credential_type: Machine
         inputs:
           username: "{{ clab_aws_admin_user }}"

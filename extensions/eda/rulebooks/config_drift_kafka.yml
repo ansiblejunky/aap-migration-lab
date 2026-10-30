@@ -22,7 +22,7 @@
       action:
         run_job_template:
           name: "LINUX | SSHD Configuration Remediation"
-          organization: "Ansible Product Demos (APD)"
+          organization: "AAP Migration Lab"
           job_args:
             extra_vars:
               config_drift_target_ip: "{{ event.body.host.ip[0] }}"

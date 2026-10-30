@@ -4,7 +4,7 @@ user_message: |
 
 controller_projects:
   - name: Fact Scan
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     scm_type: git
     scm_url: 'https://github.com/ansible/awx-facts-playbooks.git'
 
@@ -86,7 +86,7 @@ controller_credential_types:
 controller_credentials:
   - name: Kerberos Credential
     credential_type: Kerberos
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
@@ -97,7 +97,7 @@ controller_credentials:
 
   - name: Microsoft AD LDAP Credential
     credential_type: Microsoft AD LDAP
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
@@ -107,7 +107,7 @@ controller_credentials:
 
 controller_inventories:
   - name: Windows AD Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     description: Hosts discovered from Active Directory via microsoft.ad.ldap
 
 # Disable AD inventory sync during setup; dependent on Setup Active Directory Domain workflow.
@@ -118,7 +118,7 @@ controller_inventory_sources:
   - name: AD LDAP Inventory
     inventory: Windows AD Inventory
     source: scm
-    source_project: Ansible Product Demos
+    source_project: AAP Migration Lab
     source_path: windows/inventory.microsoft.ad.ldap.yml
     credential: Microsoft AD LDAP Credential
     overwrite: true
@@ -131,7 +131,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/install_iis.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -160,7 +160,7 @@ controller_templates:
     job_type: check
     ask_job_type_on_launch: true
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/patching.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -208,7 +208,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/rollback.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -234,7 +234,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/connect.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -256,7 +256,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/windows_choco_multiple.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -278,7 +278,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/windows_choco_specific.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -304,7 +304,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/powershell.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -331,7 +331,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/powershell.yml"
     limit: domain_ansible_local
     ask_inventory_on_launch: true
@@ -357,7 +357,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/powershell_script.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -387,7 +387,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/powershell_dsc.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -409,7 +409,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/create_ad_domain.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -432,7 +432,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/join_ad_domain.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -460,7 +460,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/helpdesk_new_user_portal.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -507,7 +507,7 @@ controller_templates:
       - windows
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "windows/compliance.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -531,7 +531,7 @@ controller_workflows:
       - aws.ec2
       - aws.vpc
       - windows
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry

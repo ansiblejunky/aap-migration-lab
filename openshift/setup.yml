@@ -1,11 +1,11 @@
 ---
 controller_inventories:
   - name: Ansible Product Demos Windows Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
 
 controller_credentials:
   - name: OpenShift Credential
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: OpenShift or Kubernetes API Bearer Token
     update_secrets: false
     state: exists
@@ -18,7 +18,7 @@ controller_inventory_sources:
   - name: OpenShift CNV Inventory
     inventory: Ansible Product Demos Inventory
     source: scm
-    source_project: Ansible Product Demos
+    source_project: AAP Migration Lab
     source_path: openshift/inventory.kubevirt.yml
     credential: OpenShift Credential
     update_on_launch: false
@@ -26,7 +26,7 @@ controller_inventory_sources:
   - name: OpenShift Windows CNV Inventory
     inventory: Ansible Product Demos Windows Inventory
     source: scm
-    source_project: Ansible Product Demos
+    source_project: AAP Migration Lab
     source_path: openshift/inventory.windows.kubevirt.yml
     credential: OpenShift Credential
     update_on_launch: false
@@ -40,7 +40,7 @@ controller_templates:
   - name: OpenShift | EDA | Install Controller
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/eda/install.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -55,7 +55,7 @@ controller_templates:
       - openshift
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/cnv/install.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -70,7 +70,7 @@ controller_templates:
       - rhel
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/cnv/provision_rhel.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -116,7 +116,7 @@ controller_templates:
       - openshift
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/cnv/snapshot.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -146,7 +146,7 @@ controller_templates:
       - openshift
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/cnv/snapshot.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -176,7 +176,7 @@ controller_templates:
       - openshift
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/cnv/delete.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -207,7 +207,7 @@ controller_templates:
       - patching
     job_type: check
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/cnv/patch.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -232,7 +232,7 @@ controller_templates:
       - openshift
       - patching
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/cnv/wait.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -253,7 +253,7 @@ controller_templates:
       - openshift
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/devspaces.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -266,7 +266,7 @@ controller_templates:
       - openshift
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "openshift/gitlab.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -278,7 +278,7 @@ controller_templates:
     description: Provisions Windows Server VMs on OpenShift Virtualization for the BSOD recovery demo.
     job_type: run
     inventory: Ansible Product Demos Windows Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: openshift/windows-bsod-recovery/provision_infra_multi.yml
     execution_environment: Ansible BSOD Recovery EE
     notification_templates_started: Telemetry
@@ -291,6 +291,7 @@ controller_templates:
       pvc_storage_class: ocs-external-storagecluster-ceph-rbd
       kubevirt_controller_in_cluster: true
     ask_variables_on_launch: true
+    ask_credential_on_launch: true
     credentials:
       - OpenShift Credential
       - APD Machine Credential
@@ -299,7 +300,7 @@ controller_templates:
     description: Removes Windows VMs provisioned for the BSOD recovery demo.
     job_type: run
     inventory: Ansible Product Demos Windows Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: openshift/windows-bsod-recovery/remove_infra_multi.yml
     execution_environment: Ansible BSOD Recovery EE
     notification_templates_started: Telemetry
@@ -312,6 +313,8 @@ controller_templates:
       kubevirt_controller_in_cluster: true
     ask_limit_on_launch: true
     ask_variables_on_launch: true
+    ask_inventory_on_launch: true
+    ask_credential_on_launch: true
     credentials:
       - OpenShift Credential
       - APD Machine Credential
@@ -320,7 +323,7 @@ controller_templates:
     description: Generates a WinPE recovery ISO on a provisioned Windows system.
     job_type: run
     inventory: Ansible Product Demos Windows Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: openshift/windows-bsod-recovery/generate_winpe.yml
     execution_environment: Ansible BSOD Recovery EE
     notification_templates_started: Telemetry
@@ -334,6 +337,8 @@ controller_templates:
       create_winpe_load_drivers: true
     ask_limit_on_launch: true
     ask_variables_on_launch: true
+    ask_inventory_on_launch: true
+    ask_credential_on_launch: true
     credentials:
       - OpenShift Credential
       - APD Machine Credential
@@ -342,7 +347,7 @@ controller_templates:
     description: Uploads the generated WinPE ISO to OpenShift Virtualization.
     job_type: run
     inventory: Ansible Product Demos Windows Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: openshift/windows-bsod-recovery/upload_winpe_iso.yml
     execution_environment: Ansible BSOD Recovery EE
     notification_templates_started: Telemetry
@@ -355,6 +360,8 @@ controller_templates:
       kubevirt_upload_pvc_volume_mode: Block
     ask_limit_on_launch: true
     ask_variables_on_launch: true
+    ask_inventory_on_launch: true
+    ask_credential_on_launch: true
     credentials:
       - OpenShift Credential
       - APD Machine Credential
@@ -363,7 +370,7 @@ controller_templates:
     description: Triggers a simulated Blue Screen of Death on Windows VMs in OpenShift Virtualization.
     job_type: run
     inventory: Ansible Product Demos Windows Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: openshift/windows-bsod-recovery/produce_bsod.yml
     execution_environment: Ansible BSOD Recovery EE
     notification_templates_started: Telemetry
@@ -371,6 +378,8 @@ controller_templates:
     notification_templates_error: Telemetry
     ask_limit_on_launch: true
     ask_variables_on_launch: true
+    ask_inventory_on_launch: true
+    ask_credential_on_launch: true
     credentials:
       - APD Machine Credential
 
@@ -378,7 +387,7 @@ controller_templates:
     description: Boots a BSOD-affected VM into WinPE and applies the recovery fix.
     job_type: run
     inventory: Ansible Product Demos Windows Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: openshift/windows-bsod-recovery/execute_winpe_recovery.yml
     execution_environment: Ansible BSOD Recovery EE
     notification_templates_started: Telemetry
@@ -389,6 +398,8 @@ controller_templates:
       scenario: bsod_fix
     ask_limit_on_launch: true
     ask_variables_on_launch: true
+    ask_inventory_on_launch: true
+    ask_credential_on_launch: true
     credentials:
       - OpenShift Credential
       - APD Machine Credential
@@ -397,7 +408,7 @@ controller_templates:
     description: Verifies that a Windows system is healthy after BSOD recovery.
     job_type: run
     inventory: Ansible Product Demos Windows Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: openshift/windows-bsod-recovery/check_system.yml
     execution_environment: Ansible BSOD Recovery EE
     notification_templates_started: Telemetry
@@ -405,6 +416,8 @@ controller_templates:
     notification_templates_error: Telemetry
     ask_limit_on_launch: true
     ask_variables_on_launch: true
+    ask_inventory_on_launch: true
+    ask_credential_on_launch: true
     credentials:
       - APD Machine Credential
 
@@ -414,7 +427,7 @@ controller_workflows:
     labels:
       - openshift
       - rhel
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -471,7 +484,7 @@ controller_workflows:
       - openshift
       - patching
       - rhel
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -487,7 +500,7 @@ controller_workflows:
           default: "openshift-cnv-rhel*"
     simplified_workflow_nodes:
       - identifier: Project Sync
-        unified_job_template: Ansible Product Demos
+        unified_job_template: AAP Migration Lab
         success_nodes:
           - Patch Instance
       # We need to do an invnetory sync *after* creating snapshots, as turning VMs on/off changes their IP
@@ -519,7 +532,7 @@ controller_workflows:
       Automates the process of provisioning Windows infrastructure,
       triggering a simulated BSOD, recovering via WinPE boot, and
       verifying the fix on OpenShift Virtualization.
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -576,7 +589,7 @@ controller_workflows:
     description: >
       Provisions a Windows system, generates a WinPE recovery ISO,
       uploads it to OpenShift Virtualization, and removes the build VM.
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -636,7 +649,7 @@ controller_workflows:
 
   - name: OpenShift | Windows | Clean up BSOD VMs
     description: Removes Windows VMs provisioned for the BSOD recovery demo.
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry

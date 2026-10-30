@@ -30,7 +30,7 @@ controller_credential_types:
 controller_credentials:
   - name: Satellite Inventory
     credential_type: Red Hat Satellite 6
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
@@ -40,7 +40,7 @@ controller_credentials:
 
   - name: Satellite Credential
     credential_type: Satellite Collection
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
@@ -80,7 +80,7 @@ controller_templates:
     labels:
       - rhel
       - satellite
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: satellite/server_register.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -114,7 +114,7 @@ controller_templates:
       - compliance
       - rhel
       - satellite
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: satellite/server_openscap.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -138,7 +138,7 @@ controller_templates:
   - name: SATELLITE | Publish Content View Version
     labels:
       - satellite
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: satellite/satellite_publish.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -162,7 +162,7 @@ controller_templates:
   - name: SATELLITE | Promote Content View Version
     labels:
       - satellite
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: satellite/satellite_promote.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -194,7 +194,7 @@ controller_templates:
   - name: SETUP | Satellite
     labels:
       - satellite
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: satellite/setup_satellite.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -219,7 +219,7 @@ controller_workflows:
       - rhel
       - satellite
     description: A workflow to patch the dev environment
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry

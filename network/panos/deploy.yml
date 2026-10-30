@@ -285,7 +285,7 @@
           no_log: "{{ credential_secure_logging | default(true) }}"
           ansible.controller.credential:
             name: Palo Alto Firewall Admin
-            organization: Ansible Product Demos (APD)
+            organization: AAP Migration Lab
             credential_type: Palo Alto Networks Provider
             description: Palo Alto Firewall administrator credentials compatible with the palaltonetworks.panos collection
             inputs:
@@ -366,7 +366,7 @@
           no_log: "{{ credential_secure_logging | default(true) }}"
           ansible.controller.credential:
             name: Palo Alto Bastion
-            organization: Ansible Product Demos (APD)
+            organization: AAP Migration Lab
             credential_type: SSH Proxy
             description: Palo Alto Bastion credential for supporting SSH proxy implementation
             inputs:

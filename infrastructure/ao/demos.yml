@@ -6,7 +6,7 @@
 ao_demos_repository: https://github.com/ansible-tmm/aap-orchestrator-demos
 ao_demos_ref: main
 ao_demos_project_name: AAP Orchestrator Demos
-ao_organization: Ansible Product Demos (APD)
+ao_organization: AAP Migration Lab
 ao_inventory_name: Ansible Product Demos Inventory
 ao_aap_credential_name: APD AAP Token
 ao_aap_integration_name: APD AAP

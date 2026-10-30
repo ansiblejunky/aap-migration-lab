@@ -802,7 +802,7 @@
   gather_facts: false
   vars:
     mattermost_credential_name: Mattermost
-    mattermost_credential_organization: Ansible Product Demos (APD)
+    mattermost_credential_organization: AAP Migration Lab
     # Prefer AAP Credential injectors (same as AO Install / seed).
     _mm_controller_host_raw: >-
       {{ lookup('env', 'CONTROLLER_HOST') | default(lookup('env', 'AAP_HOSTNAME'), true)

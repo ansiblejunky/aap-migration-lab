@@ -31,7 +31,7 @@ controller_credential_types:
 controller_credentials:
   - name: RHSM Registration
     credential_type: RHSM Activation Key
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
@@ -41,7 +41,7 @@ controller_credentials:
 controller_execution_environments:
   - name: TMM AWS EE
     image: quay.io/acme_corp/aws_ee
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     pull: missing
 
 controller_templates:
@@ -49,10 +49,10 @@ controller_templates:
     labels:
       - aws.vpc
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/create_peer_network.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -69,10 +69,10 @@ controller_templates:
     labels:
       - aws.vpc
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/delete_peer_network.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -85,10 +85,10 @@ controller_templates:
     labels:
       - aws.vpc
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/create_transit_network.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -105,10 +105,10 @@ controller_templates:
     labels:
       - aws.vpc
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/delete_transit_network.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -122,11 +122,11 @@ controller_templates:
       - aws.ec2
       - aws.vpc
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     execution_environment: TMM AWS EE
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/cloud_report.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -137,10 +137,10 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/snapshot_ec2.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -180,10 +180,10 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/restore_ec2.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -223,10 +223,10 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/display-ec2-stats.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -237,10 +237,10 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/delete_vm_by_name.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -270,10 +270,10 @@ controller_templates:
     labels:
       - aws.vpc
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/delete_vpc.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -298,10 +298,10 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/delete_keypair.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -328,11 +328,11 @@ controller_templates:
       - patching
       - rhel
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
       - RHSM Registration
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_pre_check_rhel.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -347,11 +347,11 @@ controller_templates:
       - patching
       - rhel
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
       - RHSM Registration
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_rhel.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -366,11 +366,11 @@ controller_templates:
       - patching
       - rhel
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
       - RHSM Registration
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_post_check_rhel.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -385,11 +385,11 @@ controller_templates:
       - patching
       - rhel
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
       - RHSM Registration
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_rollback_rhel.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -404,10 +404,10 @@ controller_templates:
       - patching
       - windows
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_pre_check_windows.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -422,10 +422,10 @@ controller_templates:
       - patching
       - windows
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_windows.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -440,10 +440,10 @@ controller_templates:
       - patching
       - windows
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_post_check_windows.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -458,10 +458,10 @@ controller_templates:
       - patching
       - windows
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_rollback_windows.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -475,11 +475,11 @@ controller_templates:
       - aws.ec2
       - patching
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - APD Machine Credential
       - RHSM Registration
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/patch_compliance_report.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -500,7 +500,7 @@ controller_workflows:
       - aws.vpc
       - rhel
       - windows
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -654,7 +654,7 @@ controller_workflows:
       - aws.vpc
       - rhel
       - windows
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -730,7 +730,7 @@ controller_workflows:
       - patching
       - rhel
       - windows
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     allow_simultaneous: true
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry

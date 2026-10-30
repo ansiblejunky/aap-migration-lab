@@ -1,5 +1,5 @@
 ---
-- name: Install Ansible Product Demos on AAP 2.4
+- name: Install the AAP Migration Lab on AAP 2.4
   hosts: localhost
   gather_facts: false
   collections:
@@ -76,7 +76,7 @@
           - _controller_ping.json.version is version('4.4', '>=')
           - _controller_ping.json.version is version('4.6', '<')
         fail_msg: |
-          This branch installs Ansible Product Demos on AAP 2.4 only.
+          This branch installs the AAP Migration Lab on AAP 2.4 only.
           Automation controller 4.4 and 4.5 are the controller releases for AAP 2.4.
           {{ controller_hostname }}/api/v2/ping/ reported version
           '{{ _controller_ping.json.version | default('unknown') }}'.
@@ -132,7 +132,7 @@
           The controller project syncs apd_git_repo @ apd_git_repo_branch, and the
           aap-2.4 branch is not published on https://github.com/ansible/product-demos.
           Push this branch to a repository the controller can clone, then re-run with:
-            export APD_GIT_REPO=https://github.com/<you>/aap-product-demos
+            export APD_GIT_REPO=https://github.com/ansiblejunky/aap-migration-lab
             export APD_GIT_REPO_BRANCH=aap-2.4
 
     - name: Run dispatcher to create APD resources

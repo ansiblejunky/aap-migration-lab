@@ -108,7 +108,7 @@ controller_credential_types:
 controller_credentials:
   - name: Palo Alto Firewall Admin
     description: Palo Alto administrator credentials used by the paloaltonetworks.panos collection
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: Palo Alto Networks Provider
     inputs:
       panos_ip_address: REPLACEME
@@ -116,14 +116,14 @@ controller_credentials:
       panos_password: REPLACEME
   - name: Palo Alto Bastion
     description: Palo Alto Bastion credential for supporting SSH proxy implementation
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: SSH Proxy
     inputs:
       ssh_proxy_host: REPLACEME
       ssh_proxy_username: ec2-user
   - name: Containerlab Device Access
     description: Admin credentials shared by Cisco, Juniper, and Arista lab devices
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: SSH Proxy
     inputs:
       ssh_proxy_host: REPLACEME
@@ -131,14 +131,14 @@ controller_credentials:
       ssh_proxy_password: "admin@123"
   - name: SCP Credential
     description: SCP credentials for staging IOS images to network devices
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: SCP
     inputs:
       scp_user: scpuser  # gitleaks:allow
       scp_password: scpuser  # gitleaks:allow
   - name: Containerlab SSH
     description: SSH key for the containerlab hypervisor, updated by the provision playbook
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: Machine
     update_secrets: false
     state: exists
@@ -147,7 +147,7 @@ controller_credentials:
 
 controller_inventories:
   - name: ContainerLab Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     description: Containerlab network devices discovered via AWS EC2
 
 controller_hosts:
@@ -207,7 +207,7 @@ controller_groups:
 
 controller_inventory_sources:
   - name: ContainerLab Hypervisor
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     source: ec2
     inventory: ContainerLab Inventory
     credential: AWS
@@ -233,7 +233,7 @@ controller_inventory_sources:
           prefix: clab
 
   - name: Panos Demo Instances
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     source: ec2
     inventory: Ansible Product Demos Inventory
     credential: AWS
@@ -263,11 +263,11 @@ controller_templates:
       - infrastructure
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - AAP Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: network/provision_hypervisor.yml
     inventory: Ansible Product Demos Inventory
     extra_vars:
@@ -318,12 +318,12 @@ controller_templates:
       - infrastructure
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - Containerlab SSH
       - AAP Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: network/deploy_containerlab.yml
     inventory: Ansible Product Demos Inventory
     extra_vars:
@@ -360,12 +360,12 @@ controller_templates:
       - infrastructure
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - Containerlab SSH
       - AAP Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: network/teardown_containerlab.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -393,11 +393,11 @@ controller_templates:
       - infrastructure
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - Containerlab SSH
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: network/troubleshoot_containerlab.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -422,10 +422,10 @@ controller_templates:
       - containerlab
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - Containerlab Device Access
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: network/configure_devices.yml
     inventory: ContainerLab Inventory
     notification_templates_started: Telemetry
@@ -440,10 +440,10 @@ controller_templates:
       - infrastructure
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: network/teardown_hypervisor.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -470,9 +470,9 @@ controller_templates:
     description: Validate EC2 KVM, resource usage, device facts, and configured lab connectivity
     labels: [network, containerlab]
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: ContainerLab Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: network/validate_containerlab.yml
     credentials:
       - Containerlab Device Access
@@ -493,9 +493,9 @@ controller_templates:
     labels:
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: ContainerLab Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "network/report.yml"
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
@@ -524,9 +524,9 @@ controller_templates:
       - compliance
       - network
     job_type: check
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: ContainerLab Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "network/compliance.yml"
     credentials:
       - Containerlab Device Access
@@ -553,9 +553,9 @@ controller_templates:
     labels:
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: ContainerLab Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "network/backup.yml"
     credentials:
       - Containerlab Device Access
@@ -565,9 +565,9 @@ controller_templates:
 
   - name: "NETWORK | Staging"
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: ContainerLab Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "network/staging.yml"
     credentials:
       - Containerlab Device Access
@@ -594,9 +594,9 @@ controller_templates:
 
   - name: "NETWORK | Upgrade"
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: ContainerLab Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: "network/upgrade.yml"
     credentials:
       - Containerlab Device Access
@@ -623,7 +623,7 @@ controller_templates:
       - infrastructure
       - network
     playbook: network/panos/deploy.yml
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     credentials:
       - AWS
       - AAP Credential
@@ -642,9 +642,9 @@ controller_templates:
     labels:
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: network/panos/configure_firewall.yml
     execution_environment: Product Demos EE
     credentials:
@@ -654,9 +654,9 @@ controller_templates:
     labels:
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: network/panos/configure_security_rule.yml
     execution_environment: Product Demos EE
     credentials:
@@ -692,9 +692,9 @@ controller_templates:
     labels:
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: network/panos/configure_webserver.yml
     execution_environment: Product Demos EE
     credentials:
@@ -708,9 +708,9 @@ controller_templates:
       - infrastructure
       - network
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
-    project: "Ansible Product Demos"
+    project: "AAP Migration Lab"
     playbook: network/panos/cleanup.yml
     execution_environment: Product Demos EE
     credentials:
@@ -727,7 +727,7 @@ controller_workflows:
       - infrastructure
       - network
     inventory: Ansible Product Demos Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     workflow_nodes:
       - identifier: Deploy
         related:
@@ -737,7 +737,7 @@ controller_workflows:
         unified_job_template:
           name: NETWORK | Panos | Deploy
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
       - identifier: Sync Inventory
@@ -748,7 +748,7 @@ controller_workflows:
           inventory:
             name: Ansible Product Demos Inventory
             organization:
-              name: Ansible Product Demos (APD)
+              name: AAP Migration Lab
               type: organization
             type: inventory
           name: Panos Demo Instances
@@ -760,7 +760,7 @@ controller_workflows:
         unified_job_template:
           name: NETWORK | Panos | Configure Firewall
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
       - all_parents_must_converge: true
@@ -768,7 +768,7 @@ controller_workflows:
         unified_job_template:
           name: NETWORK | Panos | Configure Webserver
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
 
@@ -781,7 +781,7 @@ controller_workflows:
       - infrastructure
       - network
     inventory: Ansible Product Demos Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -828,7 +828,7 @@ controller_workflows:
         unified_job_template:
           name: NETWORK | Containerlab | Provision Hypervisor
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
       - identifier: Deploy Topology
@@ -838,7 +838,7 @@ controller_workflows:
         unified_job_template:
           name: NETWORK | Containerlab | Deploy Topology
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
       - identifier: Sync ContainerLab Inventory
@@ -846,7 +846,7 @@ controller_workflows:
           inventory:
             name: ContainerLab Inventory
             organization:
-              name: Ansible Product Demos (APD)
+              name: AAP Migration Lab
               type: organization
             type: inventory
           name: ContainerLab Hypervisor
@@ -855,7 +855,7 @@ controller_workflows:
         unified_job_template:
           name: SUBMIT FEEDBACK
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
         extra_data:
@@ -869,7 +869,7 @@ controller_workflows:
       - infrastructure
       - network
     inventory: Ansible Product Demos Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -894,13 +894,13 @@ controller_workflows:
         unified_job_template:
           name: NETWORK | Containerlab | Teardown Topology
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template
       - identifier: Teardown Hypervisor
         unified_job_template:
           name: NETWORK | Containerlab | Teardown Hypervisor
           organization:
-            name: Ansible Product Demos (APD)
+            name: AAP Migration Lab
             type: organization
           type: job_template

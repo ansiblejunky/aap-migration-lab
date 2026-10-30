@@ -40,7 +40,7 @@ vault_jwt_static_role_name: aap-role-static
 vault_jwt_static_policy_name: aap-policy-static
 vault_jwt_static_secret_path: secret/data/aap/*
 vault_jwt_static_bound_claims_organization:
-  - Ansible Product Demos (APD)
+  - AAP Migration Lab
 vault_jwt_static_bound_claims:
   aap_controller_organization_name: "{{ vault_jwt_static_bound_claims_organization }}"
 vault_jwt_dynamic_role_name: aap-role-dynamic
@@ -63,7 +63,7 @@ vault_kv_sample_secrets:
     data:
       client_id: guid
       client_secret: secret
-  - path: secret/data/aap/Ansible Product Demos (APD)/ansible-sa
+  - path: secret/data/aap/AAP Migration Lab/ansible-sa
     data:
       client_id: guid
       client_secret: secret

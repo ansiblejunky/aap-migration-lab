@@ -9,7 +9,7 @@
   gather_facts: false
 
   vars:
-    config_drift_eda_project: Ansible Product Demos
+    config_drift_eda_project: AAP Migration Lab
     config_drift_eda_decision_environment: Product Demos DE
     config_drift_eda_decision_environment_image: >-
       registry.redhat.io/ansible-automation-platform-27/de-minimal-rhel9:latest
@@ -17,7 +17,7 @@
     config_drift_eda_activation_name: config_drift_kafka
     config_drift_kafka_topic: linux-audit-events
     config_drift_kafka_external_port: 9095
-    config_drift_apd_organization: Ansible Product Demos (APD)
+    config_drift_apd_organization: AAP Migration Lab
     config_drift_eda_aap_credential_host: >-
       {{
         lookup('ansible.builtin.env', 'CONTROLLER_HOST')

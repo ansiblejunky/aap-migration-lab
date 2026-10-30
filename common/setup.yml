@@ -9,23 +9,23 @@ apd_demo_tag: "true"
 controller_execution_environments:
   - name: Cloud Services Execution Environment
     image: quay.io/scottharwell/cloud-ee:latest
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: AO Execution Environment
     image: quay.io/acme_corp/ao-ee:latest
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
 
 controller_organizations:
-  - name: Ansible Product Demos (APD)
+  - name: AAP Migration Lab
     default_environment: Product Demos EE
 
 controller_inventories:
   - name: Ansible Product Demos Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
 
 controller_credentials:
   - name: AWS
     credential_type: Amazon Web Services
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
@@ -34,7 +34,7 @@ controller_credentials:
 
 controller_inventory_sources:
   - name: AWS Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     source: ec2
     inventory: Ansible Product Demos Inventory
     credential: AWS
@@ -119,46 +119,46 @@ controller_groups:
 
 controller_labels:
   - name: aws.ec2
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: aws.rosa
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: aws.vpc
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: compliance
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: containerlab
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: eda
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: infrastructure
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: linux
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: network
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: openshift
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: orchestrator
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: patching
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: policy-as-code
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: rhel
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: satellite
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
   - name: windows
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
 
 controller_templates:
   - name: SUBMIT FEEDBACK
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: feedback.yml
-    execution_environment: Default execution environment
+    execution_environment: Control Plane Execution Environment
     notification_templates_started: Telemetry
     notification_templates_success: Telemetry
     notification_templates_error: Telemetry
@@ -180,10 +180,10 @@ controller_templates:
     labels:
       - aws.vpc
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/create_vpc.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -212,11 +212,11 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - APD Machine Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/aws_key.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -254,11 +254,11 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - APD Machine Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/create_vm.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -347,10 +347,10 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/delete_vm_by_name.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -379,11 +379,11 @@ controller_templates:
     labels:
       - aws.ec2
     job_type: run
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credentials:
       - AWS
       - AAP Credential
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: cloud/resize_ec2.yml
     inventory: Ansible Product Demos Inventory
     notification_templates_started: Telemetry
@@ -416,7 +416,7 @@ controller_templates:
 
 controller_notifications:
   - name: Telemetry
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     notification_type: webhook
     notification_configuration:
       url: https://script.google.com/macros/s/AKfycbzxUObvCJ6ZbzfJyicw4RvxlGE3AZdrK4AR5-TsedCYd7O-rtTOVjvsRvqyb3rx6B0g8g/exec

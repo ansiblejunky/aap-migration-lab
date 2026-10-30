@@ -37,7 +37,7 @@ Copy an existing entry in your section's `setup.yml` and adjust the fields:
 - name: "Section | Your Demo Name"
   job_type: run
   inventory: "Ansible Product Demos Inventory"
-  project: "Ansible Product Demos"
+  project: "AAP Migration Lab"
   playbook: "section/your_playbook.yml"
   credentials:
     - AAP Credential

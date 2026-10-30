@@ -1,7 +1,7 @@
 ---
 # override these with extra vars or APD_EE_IMAGE / APD_GIT_REPO / APD_GIT_REPO_BRANCH
 apd_ee_image: '{{ lookup("env", "APD_EE_IMAGE") | default("quay.io/ansible-product-demos/apd-ee-24:latest", true) }}'
-apd_git_repo: '{{ lookup("env", "APD_GIT_REPO") | default("https://github.com/ansible/product-demos", true) }}'
+apd_git_repo: '{{ lookup("env", "APD_GIT_REPO") | default("https://github.com/ansiblejunky/aap-migration-lab", true) }}'
 apd_git_repo_branch: '{{ lookup("env", "APD_GIT_REPO_BRANCH") | default("aap-2.4", true) }}'
 
 ## initial project sync takes a while when the initial EE image pull also occurs
@@ -11,7 +11,7 @@ controller_configuration_projects_async_retries: 90
 ## demo admin user, and org-admin grant are created on the automation controller.
 ## install-apd.yml clears the user and role when no password is available.
 controller_organizations:
-  - name: Ansible Product Demos (APD)
+  - name: AAP Migration Lab
 
 controller_user_accounts:
   - username: apd-admin
@@ -21,13 +21,13 @@ controller_user_accounts:
 
 controller_roles:
   - user: apd-admin
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     role: admin
 
 controller_credentials:
   - name: AAP Credential
     credential_type: Red Hat Ansible Automation Platform
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     state: exists
     inputs:
@@ -35,7 +35,7 @@ controller_credentials:
       verify_ssl: '{{ aap_validate_certs | bool }}'
 
   - name: Automation Hub Certified Content
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: Ansible Galaxy/Automation Hub API Token
     update_secrets: false
     inputs:
@@ -44,7 +44,7 @@ controller_credentials:
       token: '{{ lookup("env","ANSIBLE_GALAXY_SERVER_CERTIFIED_TOKEN") | default(omit, true) }}'
 
   - name: Automation Hub Validated Content
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: Ansible Galaxy/Automation Hub API Token
     update_secrets: false
     inputs:
@@ -55,7 +55,7 @@ controller_credentials:
   - name: APD Machine Credential
     description: Machine credential for Windows (username/password) and Linux (SSH key) instances
     credential_type: Machine
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     inputs:
       username: '{{ apd_machine_credential_user | default("ec2-user") }}'
@@ -64,7 +64,7 @@ controller_credentials:
 
   - name: OpenShift Credential
     description: Credential for OpenShift cluster
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     credential_type: "OpenShift or Kubernetes API Bearer Token"
     update_secrets: false
     inputs:
@@ -73,7 +73,7 @@ controller_credentials:
 
   - name: AWS
     credential_type: Amazon Web Services
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
     update_secrets: false
     inputs:
       username: '{{ lookup("env", "AWS_ACCESS_KEY_ID") | default(vault_apd_aws_access_key) | default("REPLACEME") }}'
@@ -81,15 +81,15 @@ controller_credentials:
 
 controller_inventories:
   - name: Ansible Product Demos Inventory
-    organization: Ansible Product Demos (APD)
+    organization: AAP Migration Lab
 
 controller_execution_environments:
   - name: Product Demos EE
     image: '{{ apd_ee_image }}'
 
 controller_projects:
-  - name: Ansible Product Demos
-    organization: Ansible Product Demos (APD)
+  - name: AAP Migration Lab
+    organization: AAP Migration Lab
     scm_type: git
     scm_url: '{{ apd_git_repo }}'
     scm_branch: '{{ apd_git_repo_branch }}'
@@ -100,7 +100,7 @@ controller_templates:
   - name: "APD | Single demo setup"
     job_type: run
     inventory: Ansible Product Demos Inventory
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: setup_demo.yml
     credentials: AAP Credential
     execution_environment: Product Demos EE
@@ -124,7 +124,7 @@ controller_templates:
             - satellite
 
   - name: "APD | Multi-demo setup"
-    project: Ansible Product Demos
+    project: AAP Migration Lab
     playbook: multi_select_setup.yml
     inventory: Ansible Product Demos Inventory
     credentials: AAP Credential

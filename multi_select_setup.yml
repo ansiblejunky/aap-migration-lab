@@ -5,6 +5,8 @@
   collections:
     - ansible.controller
   vars:
+    # verify talks to Galaxy and fails for ansible.controller, which ships in the EE.
+    controller_dependency_check: false
     launch_jobs:
       name: "APD | Single demo setup"
       wait: true
@@ -17,5 +19,7 @@
     - name: Default Components
       ansible.builtin.include_role:
         name: infra.controller_configuration.job_launch
+      vars:
+        controller_dependency_check: false  # noqa: var-naming[no-role-prefix]
 
 ...
